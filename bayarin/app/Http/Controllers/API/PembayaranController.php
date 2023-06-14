@@ -32,7 +32,6 @@ class PembayaranController extends Controller
             'tagihan' => $tagihan
         ], 200);
     }
-    
     public function store(PembayaranRequest $request, $id)
 {
     $nasabah = Nasabah::find($id);
@@ -43,7 +42,10 @@ class PembayaranController extends Controller
         ], 404);
     }
 
-    $tagihan = Tagihan::where('nomor_tagihan', $request->input('nomor_tagihan'))->first();
+    $tagihan = Tagihan::where('nasabah_id', $nasabah->id)
+        ->where('nomor_tagihan', $request->input('nomor_tagihan'))
+        ->where('jumlah_tagihan', $request->input('jumlah_tagihan'))
+        ->first();
 
     if (!$tagihan) {
         return response()->json([
@@ -51,11 +53,8 @@ class PembayaranController extends Controller
         ], 404);
     }
 
-    $tagihan = Tagihan::create([
-        'nasabah_id' => $nasabah->id,
-        'nomor_tagihan' => $tagihan->nomor_tagihan,
-        'jumlah_tagihan' => $request->input('jumlah_tagihan'),
-        'status_pembayaran' => $request->input('status_pembayaran') // Tambahkan status_pembayaran berdasarkan input pengguna
+    $tagihan->update([
+        'status_pembayaran' => 'Lunas'
     ]);
 
     return response()->json([
@@ -63,6 +62,5 @@ class PembayaranController extends Controller
         'pembayaran' => $tagihan
     ], 201);
 }
-
 
 }

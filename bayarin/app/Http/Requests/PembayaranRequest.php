@@ -14,10 +14,9 @@ class PembayaranRequest extends FormRequest
     public function rules()
     {
         return [
-            'nasabah_id' => 'required|exists:nasabahs,id',
+            'nasabah_id' => 'required|integer',
             'nomor_tagihan' => 'required|string',
             'jumlah_tagihan' => 'required|numeric',
-            'status_pembayaran' => 'required|string'
         ];
     }
 }
